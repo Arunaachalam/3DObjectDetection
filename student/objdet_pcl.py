@@ -178,14 +178,14 @@ def bev_from_pcl(lidar_pcl, configs):
     ## step 5 : temporarily visualize the intensity map using OpenCV to make sure that vehicles separate well from the background
     img_intensity = intensity_map * 255
     img_intensity = img_intensity.astype(np.uint8)
-    #cv2.imshow('img_intensity', img_intensity)
-    #cv2.imwrite('./img/Ex4/image.jpg', img_intensity)
+    # cv2.imshow('img_intensity', img_intensity)
+    # cv2.imwrite('./img/Ex4/image.jpg', img_intensity)
 
-    #heatmapshow = None
-    #heatmapshow = cv2.normalize(img_intensity, heatmapshow, alpha=0, beta = 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-    #heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_JET)
-    #cv2.imshow('Heatmap', heatmapshow)
-    #cv2.imwrite('./img/Ex4/heatmap.png', heatmapshow)
+    # heatmapshow = None
+    # heatmapshow = cv2.normalize(img_intensity, heatmapshow, alpha=0, beta = 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+    # heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_JET)
+    # cv2.imshow('Heatmap', heatmapshow)
+    # cv2.imwrite('./img/Ex4/heatmap.png', heatmapshow)
 
     #######
     ####### ID_S2_EX2 END ####### 
@@ -197,12 +197,24 @@ def bev_from_pcl(lidar_pcl, configs):
     print("student task ID_S2_EX3")
 
     ## step 1 : create a numpy array filled with zeros which has the same dimensions as the BEV map
+    height_map = np.zeros((configs.bev_height + 1, configs.bev_width + 1))
 
     ## step 2 : assign the height value of each unique entry in lidar_top_pcl to the height map 
     ##          make sure that each entry is normalized on the difference between the upper and lower height defined in the config file
     ##          use the lidar_pcl_top data structure from the previous task to access the pixels of the height_map
+    height_map[np.int_(lidar_pcl_int[:,0]), np.int_(lidar_pcl_int[:,1])] = (lidar_pcl_int[:,2]-configs.lim_z[0])/(configs.lim_z[1]-configs.lim_z[0])
 
     ## step 3 : temporarily visualize the intensity map using OpenCV to make sure that vehicles separate well from the background
+    height_intensity = height_map * 255
+    height_intensity = height_intensity.astype(np.uint8)
+    # cv2.imshow('Height map', height_intensity)
+    # cv2.imwrite('./img/Ex5/image.jpg', height_intensity)
+
+    # heatmapshow = None
+    # heatmapshow = cv2.normalize(height_intensity, heatmapshow, alpha=0, beta = 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+    # heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_JET)
+    # cv2.imshow('Heatmap', heatmapshow)
+    # cv2.imwrite('./img/Ex5/heatmap.png', heatmapshow)
 
     #######
     ####### ID_S2_EX3 END #######       
