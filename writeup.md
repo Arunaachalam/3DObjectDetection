@@ -16,10 +16,16 @@ In this task the following things are obtained
 3. One important thing is that vehicles very near to the Ego, or vehicles on a crowded space are difficult to grasp
 4. The environmental assets like trees, bush are clearly visible
 
-![alt test](./img/Ex2/Img1.png)
-![alt test](./img/Ex2/Img2.png)
-![alt test](./img/Ex2/Img3.png)
-![alt test](./img/Ex2/Img4.png)
+![alt text](./img/Ex2/Img1.png)
+![alt text](./img/Ex2/Img2.png)
+![alt text](./img/Ex2/Img3.png)
+![alt text](./img/Ex2/Img4.png)
+
+## Exercise 3
+In this task, the following things are obtained
+1. A BEV image of the point cloud is made
+
+![alt text](./img/Ex3/image.png)
 
 
 Please use this starter template to answer the following questions:
