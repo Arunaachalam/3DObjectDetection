@@ -36,6 +36,17 @@ In this task, the following things are obtained
 ![alt text](./img/Ex4/image.jpg)
 ![alt text](./img/Ex4/heatmap.png)
 
+## ID_S2_EX3: Compute height layer of BEV-map
+In this task, the following things are obtained
+1. The height is normalizec from the BEV-map
+2. The minimum height is removed from the point cloud
+3. An even better image is obtained
+
+![alt text](./img/Ex5/image.jpg)
+![alt text](./img/Ex5/heatmap.png)
+
+
+
 Please use this starter template to answer the following questions:
 
 ### 1. Write a short recap of the four tracking steps and what you implemented there (filter, track management, association, camera fusion). Which results did you achieve? Which part of the project was most difficult for you to complete, and why?
