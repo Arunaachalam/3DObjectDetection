@@ -31,8 +31,10 @@ In this task, the following things are obtained
 In this task, the following things are obtained
 1. The intensity values in BEV-map is updated
 2. Used normalization to eliminate the outliers
+3. A heat map is made for the image created
 
 ![alt text](./img/Ex4/image.jpg)
+![alt text](./img/Ex4/heatmap.png)
 
 Please use this starter template to answer the following questions:
 

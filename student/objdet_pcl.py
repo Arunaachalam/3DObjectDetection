@@ -178,8 +178,14 @@ def bev_from_pcl(lidar_pcl, configs):
     ## step 5 : temporarily visualize the intensity map using OpenCV to make sure that vehicles separate well from the background
     img_intensity = intensity_map * 255
     img_intensity = img_intensity.astype(np.uint8)
-    cv2.imshow('img_intensity', img_intensity)
-    cv2.imwrite('./img/Ex4/image.jpg', img_intensity)
+    #cv2.imshow('img_intensity', img_intensity)
+    #cv2.imwrite('./img/Ex4/image.jpg', img_intensity)
+
+    #heatmapshow = None
+    #heatmapshow = cv2.normalize(img_intensity, heatmapshow, alpha=0, beta = 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+    #heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_JET)
+    #cv2.imshow('Heatmap', heatmapshow)
+    #cv2.imwrite('./img/Ex4/heatmap.png', heatmapshow)
 
     #######
     ####### ID_S2_EX2 END ####### 
