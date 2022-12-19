@@ -1,6 +1,6 @@
 # Writeup: Track 3D-Objects Over Time
 
-## Exercise 1
+## ID_S1_EX1: Visualize range image channels
 In this task the following things are obtained.
 1. Range image is obtained
 2. Intensity image is obtained
@@ -9,7 +9,7 @@ In this task the following things are obtained.
 
 ![alt text](./img/Ex1/ex1.png)
 
-## Exercise 2
+## ID_S1_EX2: Visualize Point-cloud
 In this task the following things are obtained
 1. 10 examples of vehicles in varying degree is found
 2. It was noted that the stable arts of the vehicles found on point cloud are the front and back parts especially above the wheels. The front curves are visible clearly, similarly the back curves too.
@@ -21,12 +21,18 @@ In this task the following things are obtained
 ![alt text](./img/Ex2/Img3.png)
 ![alt text](./img/Ex2/Img4.png)
 
-## Exercise 3
+## ID_S2_EX1: Convert sensor coordinates to BEV-map coordinates
 In this task, the following things are obtained
 1. A BEV image of the point cloud is made
 
 ![alt text](./img/Ex3/image.png)
 
+## ID_S2_EX2: Compute intensity layer of BEV-map
+In this task, the following things are obtained
+1. The intensity values in BEV-map is updated
+2. Used normalization to eliminate the outliers
+
+![alt text](./img/Ex4/image.png)
 
 Please use this starter template to answer the following questions:
 
