@@ -25,7 +25,7 @@ In this task the following things are obtained
 In this task, the following things are obtained
 1. A BEV image of the point cloud is made
 
-![alt text](./img/Ex3/image.png)
+![alt text](./img/Ex3/image.jpg)
 
 ## ID_S2_EX2: Compute intensity layer of BEV-map
 In this task, the following things are obtained
