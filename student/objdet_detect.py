@@ -56,6 +56,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_workers = 4
         configs.pin_memory = True
         configs.use_giou_loss = False
+        configs.min_iou = 0.5
 
     elif model_name == 'fpn_resnet':
         ####### ID_S3_EX1-3 START #######     
@@ -98,6 +99,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_z = 1
         configs.num_dim = 3
         configs.num_direction = 2  # sin cos
+        configs.min_iou = 0.5
 
         configs.heads = {
             'hm_cen': configs.num_classes,
