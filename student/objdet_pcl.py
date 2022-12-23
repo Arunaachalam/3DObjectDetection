@@ -78,6 +78,7 @@ def show_range_image(frame, lidar_name):
         ri = dataset_pb2.MatrixFloat()
         ri.ParseFromString(zlib.decompress(lidar.ri_return1.range_image_compressed))
         ri = np.array(ri.data).reshape(ri.shape.dims)
+        ri[ri < 0] = 0
 
     # step 2 : extract the range and the intensity channel from the range image
     ri_range = ri[:, :, 0]
@@ -92,15 +93,14 @@ def show_range_image(frame, lidar_name):
     img_range = ri_range.astype(np.uint8)
 
     # step 4.5 : cut at 90 degrees
-    deg90 = int(img_range.shape[1]/4)
+    deg90 = int(img_range.shape[1]/8)
     ri_center = int(img_range.shape[1]/2)
     img_range = img_range[:, ri_center-deg90:ri_center+deg90]
 
 
 
     # step 5 : map the intensity channel onto an 8-bit scale and normalize with the difference between the 1- and 99-percentile to mitigate the influence of outliers
-    ri_intensity = np.amax(ri_intensity) / 2 * ri_intensity * 255 / (np.amax(
-        ri_intensity) - np.amax(ri_intensity))
+    ri_intensity = np.amax(ri_intensity) / 2 * ri_intensity * 255 / (np.amax(ri_intensity) - np.amin(ri_intensity))
     img_intensity = ri_intensity.astype(np.int8)
 
     # Step 5.5: cut at 90 degrees
@@ -147,7 +147,7 @@ def bev_from_pcl(lidar_pcl, configs):
     lidar_pcl_cpy[lidar_pcl_cpy[:,1] < 0, 1] = 0
 
     # step 4 : visualize point-cloud using the function show_pcl from a previous task
-    #show_pcl(lidar_pcl_cpy)
+    # show_pcl(lidar_pcl_cpy)
     
     #######
     ####### ID_S2_EX1 END #######     
@@ -205,7 +205,7 @@ def bev_from_pcl(lidar_pcl, configs):
     height_map[np.int_(lidar_pcl_top[:,0]), np.int_(lidar_pcl_top[:,1])] = (lidar_pcl_top[:,2]-configs.lim_z[0])/(configs.lim_z[1]-configs.lim_z[0])
 
     ## step 3 : temporarily visualize the intensity map using OpenCV to make sure that vehicles separate well from the background
-    height_intensity = height_map * 255
+    height_intensity = height_map * 256
     height_intensity = height_intensity.astype(np.uint8)
     # cv2.imshow('Height map', height_intensity)
     # cv2.imwrite('./img/Ex5/image.jpg', height_intensity)
