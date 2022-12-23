@@ -50,7 +50,7 @@ import misc.params as params
 # Added Section to execute parameter Initializations
 
 # Possible parameters: ID_S1_EX1, ID_S1_EX2
-exercise = 'ID_S1_EX1'
+exercise = 'ID_S1_EX2'
 
 if exercise == 'ID_S1_EX1':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
@@ -62,6 +62,15 @@ if exercise == 'ID_S1_EX1':
     exec_visualization = ['show_range_image']
     model = 'darknet'
 
+if exercise == 'ID_S1_EX2':
+    data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord'
+    sequence = '3'
+    show_only_frames = [0, 200]
+    exec_data = []
+    exec_detection = []
+    exec_tracking = []
+    exec_visualization = ['show_pcl']
+    model = 'darknet'
 
 ## Select Waymo Open Dataset file and frame numbers
 # data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
