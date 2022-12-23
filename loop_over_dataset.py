@@ -49,8 +49,8 @@ import misc.params as params
 ## Set parameters and perform initializations
 # Added Section to execute parameter Initializations
 
-# Possible parameters: ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, 
-exercise = 'ID_S2_EX1-3'
+# Possible parameters: ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, ID_S3_EX1-2
+exercise = 'ID_S3_EX1-2'
 
 if exercise == 'ID_S1_EX1':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
@@ -61,6 +61,7 @@ if exercise == 'ID_S1_EX1':
     exec_tracking = []
     exec_visualization = ['show_range_image']
     model = 'darknet'
+    model_name = model
 
 if exercise == 'ID_S1_EX2':
     data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord'
@@ -71,6 +72,7 @@ if exercise == 'ID_S1_EX2':
     exec_tracking = []
     exec_visualization = ['show_pcl']
     model = 'darknet'
+    model_name = model
 
 if exercise == 'ID_S2_EX1-3':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
@@ -81,7 +83,20 @@ if exercise == 'ID_S2_EX1-3':
     exec_tracking = []
     exec_visualization = []
     model = 'darknet'
-    vis = True
+    model_name = model
+    vis = False
+
+if exercise == 'ID_S3_EX1-2':
+    data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
+    sequence = '1'
+    show_only_frames = [50, 51]
+    exec_data = ['pcl_from_rangeimage', 'load_image']
+    exec_detection = ['bev_from_pcl', 'detect_objects']
+    exec_tracking = []
+    exec_visualization = ['show_objects_in_bev_labels_in_camera']
+    model_name = 'fpn_resnet'
+    model = 'fpn-resnet'
+    vis = False
 
 ## Select Waymo Open Dataset file and frame numbers
 # data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
@@ -100,7 +115,7 @@ datafile = WaymoDataFileReader(data_fullpath)
 datafile_iter = iter(datafile)  # initialize dataset iterator
 
 ## Initialize object detection
-configs_det = det.load_configs(model_name=model) # options are 'darknet', 'fpn_resnet'
+configs_det = det.load_configs(model_name=model_name) # options are 'darknet', 'fpn_resnet'
 model_det = det.create_model(configs_det)
 
 configs_det.use_labels_as_objects = False # True = use groundtruth labels as objects, False = use model-based detection
