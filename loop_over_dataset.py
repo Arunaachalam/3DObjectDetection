@@ -49,8 +49,8 @@ import misc.params as params
 ## Set parameters and perform initializations
 # Added Section to execute parameter Initializations
 
-# Possible parameters: ID_S1_EX1, ID_S1_EX2
-exercise = 'ID_S1_EX2'
+# Possible parameters: ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, 
+exercise = 'ID_S2_EX1-3'
 
 if exercise == 'ID_S1_EX1':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
@@ -71,6 +71,17 @@ if exercise == 'ID_S1_EX2':
     exec_tracking = []
     exec_visualization = ['show_pcl']
     model = 'darknet'
+
+if exercise == 'ID_S2_EX1-3':
+    data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
+    sequence = '1'
+    show_only_frames = [0, 1]
+    exec_data = ['pcl_from_rangeimage']
+    exec_detection = ['bev_from_pcl']
+    exec_tracking = []
+    exec_visualization = []
+    model = 'darknet'
+    vis = True
 
 ## Select Waymo Open Dataset file and frame numbers
 # data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
@@ -158,7 +169,7 @@ while True:
         ## Compute lidar birds-eye view (bev)
         if 'bev_from_pcl' in exec_list:
             print('computing birds-eye view from lidar pointcloud')
-            lidar_bev = pcl.bev_from_pcl(lidar_pcl, configs_det)
+            lidar_bev = pcl.bev_from_pcl(lidar_pcl, configs_det, vis)
         else:
             print('loading birds-eve view from result file')
             lidar_bev = load_object_from_file(results_fullpath, data_filename, 'lidar_bev', cnt_frame)

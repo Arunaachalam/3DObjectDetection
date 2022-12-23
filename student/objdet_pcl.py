@@ -118,7 +118,7 @@ def show_range_image(frame, lidar_name):
 
 
 # create birds-eye view of lidar data
-def bev_from_pcl(lidar_pcl, configs):
+def bev_from_pcl(lidar_pcl, configs, vis):
 
     # remove lidar points outside detection area and with too low reflectivity
     mask = np.where((lidar_pcl[:, 0] >= configs.lim_x[0]) & (lidar_pcl[:, 0] <= configs.lim_x[1]) &
@@ -147,7 +147,8 @@ def bev_from_pcl(lidar_pcl, configs):
     lidar_pcl_cpy[lidar_pcl_cpy[:,1] < 0, 1] = 0
 
     # step 4 : visualize point-cloud using the function show_pcl from a previous task
-    # show_pcl(lidar_pcl_cpy)
+    if vis:
+        show_pcl(lidar_pcl_cpy)
     
     #######
     ####### ID_S2_EX1 END #######     
@@ -218,7 +219,7 @@ def bev_from_pcl(lidar_pcl, configs):
 
     #######
     ####### ID_S2_EX3 END #######       
-
+    
     # Compute density layer of the BEV map
     density_map = np.zeros((configs.bev_height + 1, configs.bev_width + 1))
     _, _, counts = np.unique(lidar_pcl_cpy[:, 0:2], axis=0, return_index=True, return_counts=True)
