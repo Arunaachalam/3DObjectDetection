@@ -45,18 +45,13 @@ In this task, the following things are obtained
 ![alt text](./img/Ex5/image.jpg)
 ![alt text](./img/Ex5/heatmap.png)
 
+## ID_S3_EX1: Add a second model from a GitHub repo
+In this task, the following things are obtained
+1. The parameters for the model was obtained from SFA3d
+2. The parameters are used to set up the model parameters
+3. The model was set and the detections are obtained
 
-
-Please use this starter template to answer the following questions:
-
-### 1. Write a short recap of the four tracking steps and what you implemented there (filter, track management, association, camera fusion). Which results did you achieve? Which part of the project was most difficult for you to complete, and why?
-
-
-### 2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)? 
-
-
-### 3. Which challenges will a sensor fusion system face in real-life scenarios? Did you see any of these challenges in the project?
-
-
-### 4. Can you think of ways to improve your tracking results in the future?
+## ID_S3_EX2: Extract 3D bounding boxes frommodel response
+In this task, the following things are obtained
+1. The bounding boxes are plotted from the detections
 
