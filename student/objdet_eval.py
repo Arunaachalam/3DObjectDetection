@@ -53,13 +53,11 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             w, l, heading = label.box.width, label.box.length, label.box.heading
 
             label_box = tools.compute_box_corners(x, y, w, l, heading)
-            print('labelbox ', label_box)
             ## step 2 : loop over all detected objects
             for det in detections:
                 ## step 3 : extract the four corners of the current detection
                 id, x_d, y_d, z_d, w_d, h_d, l_d, heading_d = det
                 det_box = tools.compute_box_corners(x_d, y_d, w_d, l_d, heading_d)
-                print('detbox: ', det_box)
                 ## step 4 : computer the center distance between label and detection bounding-box in x, y, and z
                 x_diff = np.array(x - x_d).item()
                 y_diff = np.array(y - y_d).item()
@@ -110,7 +108,7 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
 
 
 # evaluate object detection performance based on all frames
-def compute_performance_stats(det_performance_all):
+def compute_performance_stats(det_performance_all, configs_det):
 
     # extract elements
     ious = []

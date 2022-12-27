@@ -24,7 +24,8 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 # model-related
 from tools.objdet_models.resnet.models import fpn_resnet
-from tools.objdet_models.resnet.utils.evaluation_utils import decode, post_processing 
+from tools.objdet_models.resnet.utils.evaluation_utils import decode, post_processing
+from tools.objdet_models.resnet.utils.torch_utils import _sigmoid
 
 from tools.objdet_models.darknet.models.darknet2pytorch import Darknet as darknet
 from tools.objdet_models.darknet.utils.evaluation_utils import post_processing_v2
@@ -67,7 +68,6 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.pretrained_filename = os.path.join(configs.model_path, 'pretrained', 'fpn_resnet_18_epoch_300.pth')
         configs.arch = 'fpn_resnet'
 
-
         configs.batch_size = 1
         configs.conf_thresh = 0.5
         configs.nms_thresh = 0.4
@@ -83,9 +83,9 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.K = 50
         configs.peak_thresh = 0.2
 
-        configs.pin_memory = True
-        configs.distributed = False
-        configs.img_size = 608
+        # configs.pin_memory = True
+        # configs.distributed = False
+        # configs.img_size = 608
 
         configs.input_size = (608, 608)
         configs.hm_size = (152, 152)
@@ -165,8 +165,8 @@ def create_model(configs):
         ####### ID_S3_EX1-4 START #######     
         #######
         print("student task ID_S3_EX1-4")
-        # print('Imagenet_pretrained: ', configs.imagenet_pretrained)
-        model = fpn_resnet.get_pose_net(configs.num_layers, configs.heads, configs.head_conv, configs.imagenet_pretrained)
+        # model = fpn_resnet.get_pose_net(configs.num_layers, configs.heads, configs.head_conv, configs.imagenet_pretrained)
+        model = fpn_resnet.get_pose_net(18, configs.heads, configs.head_conv, configs.imagenet_pretrained)
 
         #######
         ####### ID_S3_EX1-4 END #######     
@@ -216,8 +216,11 @@ def detect_objects(input_bev_maps, model, configs):
             ####### ID_S3_EX1-5 START #######     
             #######
             print("student task ID_S3_EX1-5")
+            outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
+            outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
+
             detections = decode(outputs['hm_cen'], outputs['cen_offset'], outputs['direction'], outputs['z_coor'], outputs['dim'], K=configs.K)
-            detections = detections.numpy()
+            detections = detections.cpu().numpy().astype(np.float32)
             detections = post_processing(detections, configs)
             detections = detections[0][1]
             print('Detections: \n', detections)

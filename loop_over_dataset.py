@@ -50,7 +50,7 @@ import misc.params as params
 # Added Section to execute parameter Initializations
 
 # Possible parameters: ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, ID_S3_EX1-2, ID_S4_EX1-3
-exercise = 'ID_S4_EX1-3'
+exercise = 'ID_S3_EX1-2'
 
 if exercise == 'ID_S1_EX1':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
@@ -118,11 +118,16 @@ if exercise == 'ID_S4_EX1-3':
 
 ## Prepare Waymo Open Dataset file for loading
 data_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dataset', data_filename) # adjustable path in case this script is called from another working directory
+# data_fullpath = f'/home/workspace/dataset/{data_filename}' # adjustable path in case this script is called from another working directory
 #model = 'darknet'#"fpn-resnet"
 #sequence = "3"
 results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_' + model)
+# results_fullpath = f'/home/workspace/results/{model}/results_sequence_{sequence}_{model}'
+
 if model == 'fpn-resnet':
     results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_resnet' )
+    # results_fullpath = f'/home/workspace/results/{model}/results_sequence_{sequence}_resnet'
+
 datafile = WaymoDataFileReader(data_fullpath)
 datafile_iter = iter(datafile)  # initialize dataset iterator
 
