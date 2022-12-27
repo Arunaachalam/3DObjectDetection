@@ -50,7 +50,7 @@ import misc.params as params
 # Added Section to execute parameter Initializations
 
 # Possible parameters: ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, ID_S3_EX1-2, ID_S4_EX1-3
-exercise = 'ID_S3_EX1-2'
+exercise = 'ID_S1_EX1'
 
 if exercise == 'ID_S1_EX1':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'

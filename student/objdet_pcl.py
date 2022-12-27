@@ -93,7 +93,7 @@ def show_range_image(frame, lidar_name):
     img_range = ri_range.astype(np.uint8)
 
     # step 4.5 : cut at 90 degrees
-    deg90 = int(img_range.shape[1]/8)
+    deg90 = int(img_range.shape[1]/4)
     ri_center = int(img_range.shape[1]/2)
     img_range = img_range[:, ri_center-deg90:ri_center+deg90]
 
