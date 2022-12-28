@@ -47,98 +47,88 @@ import misc.params as params
  
 ##################
 ## Set parameters and perform initializations
-# Added Section to execute parameter Initializations
-
-# Possible parameters: ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, ID_S3_EX1-2, ID_S4_EX1-3
-exercise = 'ID_S1_EX1'
+# Set exercise global param first
+# Can take values ID_S1_EX1, ID_S1_EX2, ID_S2_EX1-3, ID_S3_EX1-2, ID_S4_EX1-3
+exercise = 'ID_S4_EX1-3'
 
 if exercise == 'ID_S1_EX1':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
     sequence = '1'
+    model_select = 'darknet'
+    model = 'darknet'
     show_only_frames = [0, 1]
     exec_data = []
     exec_detection = []
     exec_tracking = []
     exec_visualization = ['show_range_image']
-    model = 'darknet'
-    model_name = model
 
 if exercise == 'ID_S1_EX2':
     data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord'
     sequence = '3'
+    model_select = 'darknet'
+    model = 'darknet'
     show_only_frames = [0, 200]
     exec_data = []
     exec_detection = []
     exec_tracking = []
-    exec_visualization = ['show_pcl']
-    model = 'darknet'
-    model_name = model
+    exec_visualization = ["show_pcl"]
 
 if exercise == 'ID_S2_EX1-3':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
     sequence = '1'
+    model_select = 'darknet'
+    model = 'darknet'
     show_only_frames = [0, 1]
     exec_data = ['pcl_from_rangeimage']
     exec_detection = ['bev_from_pcl']
     exec_tracking = []
     exec_visualization = []
-    model = 'darknet'
-    model_name = model
-    vis = False
+    vis = True
 
 if exercise == 'ID_S3_EX1-2':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
     sequence = '1'
+    model_select = 'fpn_resnet'
+    model = 'fpn-resnet'
     show_only_frames = [50, 51]
     exec_data = ['pcl_from_rangeimage', 'load_image']
-    exec_detection = ['bev_from_pcl', 'detect_objects']
+    exec_detection = ['bev_frpm_pcl', 'detect_objects']
     exec_tracking = []
     exec_visualization = ['show_objects_in_bev_labels_in_camera']
-    model_name = 'fpn_resnet'
-    model = 'fpn-resnet'
-    vis = False
 
 if exercise == 'ID_S4_EX1-3':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
     sequence = '1'
+    model_select = 'darknet'
+    model = 'darknet'
     show_only_frames = [50, 51]
     exec_data = ['pcl_from_rangeimage']
     exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance']
     exec_tracking = []
     exec_visualization = ['show_detection_performance']
-    model_name = 'darknet'
-    model = 'darknet'
-    vis = False
 
 ## Select Waymo Open Dataset file and frame numbers
 # data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
 # data_filename = 'training_segment-10072231702153043603_5725_000_5745_000_with_camera_labels.tfrecord' # Sequence 2
-#data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord' # Sequence 3
-#show_only_frames = [50, 51] # show only frames in interval for debugging
+# data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord' # Sequence 3
+# show_only_frames = [0, 200] # show only frames in interval for debugging
 
 ## Prepare Waymo Open Dataset file for loading
 data_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dataset', data_filename) # adjustable path in case this script is called from another working directory
-# data_fullpath = f'/home/workspace/dataset/{data_filename}' # adjustable path in case this script is called from another working directory
-#model = 'darknet'#"fpn-resnet"
+# model = "darknet"
 #sequence = "3"
 results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_' + model)
-# results_fullpath = f'/home/workspace/results/{model}/results_sequence_{sequence}_{model}'
-
 if model == 'fpn-resnet':
-    results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_resnet' )
-    # results_fullpath = f'/home/workspace/results/{model}/results_sequence_{sequence}_resnet'
+    results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_resnet')
 
 datafile = WaymoDataFileReader(data_fullpath)
 datafile_iter = iter(datafile)  # initialize dataset iterator
 
 ## Initialize object detection
-configs_det = det.load_configs(model_name=model_name) # options are 'darknet', 'fpn_resnet'
+configs_det = det.load_configs(model_name=model_select) # options are 'darknet', 'fpn_resnet'
 model_det = det.create_model(configs_det)
 
 configs_det.use_labels_as_objects = False # True = use groundtruth labels as objects, False = use model-based detection
-
-if (exercise == 'ID_S4_EX1-3' or exercise == 'ID_S3_EX1-2'):
-    configs_det.lim_y = [-25, 25]
 
 ## Uncomment this setting to restrict the y-range in the final project
 # configs_det.lim_y = [-25, 25] 
@@ -152,7 +142,7 @@ camera = None # init camera sensor object
 np.random.seed(10) # make random values predictable
 
 ## Selective execution and visualization
-#exec_detection = ['show_range_image']#['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file
+#exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file
 #exec_tracking = [] # options are 'perform_tracking'
 #exec_visualization = [] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
 exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization)
@@ -199,8 +189,8 @@ while True:
             lidar_pcl = tools.pcl_from_range_image(frame, lidar_name)
         else:
             print('loading lidar point-cloud from result file')
-            lidar_pcl = load_object_from_file(results_fullpath, data_filename, 'lidar_pcl' , cnt_frame)
-             
+            lidar_pcl = load_object_from_file(results_fullpath, data_filename, 'lidar_pcl', cnt_frame)
+            
         ## Compute lidar birds-eye view (bev)
         if 'bev_from_pcl' in exec_list:
             print('computing birds-eye view from lidar pointcloud')
@@ -244,7 +234,6 @@ while True:
         if 'show_range_image' in exec_list:
             img_range = pcl.show_range_image(frame, lidar_name)
             img_range = img_range.astype(np.uint8)
-            cv2.imwrite('./img/Ex1/ex1.png', img_range)
             cv2.imshow('range_image', img_range)
             cv2.waitKey(vis_pause_time)
 

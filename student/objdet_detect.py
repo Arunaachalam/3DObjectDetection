@@ -24,7 +24,7 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 # model-related
 from tools.objdet_models.resnet.models import fpn_resnet
-from tools.objdet_models.resnet.utils.evaluation_utils import decode, post_processing
+from tools.objdet_models.resnet.utils.evaluation_utils import decode, post_processing 
 from tools.objdet_models.resnet.utils.torch_utils import _sigmoid
 
 from tools.objdet_models.darknet.models.darknet2pytorch import Darknet as darknet
@@ -57,7 +57,6 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_workers = 4
         configs.pin_memory = True
         configs.use_giou_loss = False
-        configs.min_iou = 0.5
 
     elif model_name == 'fpn_resnet':
         ####### ID_S3_EX1-3 START #######     
@@ -68,24 +67,17 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.pretrained_filename = os.path.join(configs.model_path, 'pretrained', 'fpn_resnet_18_epoch_300.pth')
         configs.arch = 'fpn_resnet'
 
+        configs.K = 50
+        configs.num_samples = None
+        configs.num_workers = 1
         configs.batch_size = 1
-        configs.conf_thresh = 0.5
-        configs.nms_thresh = 0.4
-
+        configs.peak_thresh = 0.2
         configs.save_test_output = False
         configs.output_format = 'image'
         configs.output_video_fn = 'out_fpn_resnet'
 
-        configs.num_samples = None
-        configs.num_workers = 1
-
-        configs.num_layers = 18
-        configs.K = 50
-        configs.peak_thresh = 0.2
-
-        # configs.pin_memory = True
-        # configs.distributed = False
-        # configs.img_size = 608
+        configs.nms_thresh = 0.4
+        configs.conf_thresh = 0.5
 
         configs.input_size = (608, 608)
         configs.hm_size = (152, 152)
@@ -98,8 +90,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_center_offset = 2
         configs.num_z = 1
         configs.num_dim = 3
-        configs.num_direction = 2  # sin cos
-        configs.min_iou = 0.5
+        configs.num_direction = 2
 
         configs.heads = {
             'hm_cen': configs.num_classes,
@@ -111,6 +102,7 @@ def load_configs_model(model_name='darknet', configs=None):
 
         configs.num_input_features = 4
 
+
         #######
         ####### ID_S3_EX1-3 END #######     
 
@@ -121,6 +113,7 @@ def load_configs_model(model_name='darknet', configs=None):
     configs.no_cuda = True # if true, cuda is not used
     configs.gpu_idx = 0  # GPU index to use.
     configs.device = torch.device('cpu' if configs.no_cuda else 'cuda:{}'.format(configs.gpu_idx))
+    configs.min_iou = 0.5
 
     return configs
 
@@ -146,11 +139,13 @@ def load_configs(model_name='fpn_resnet', configs=None):
     # visualization parameters
     configs.output_width = 608 # width of result image (height may vary)
     configs.obj_colors = [[0, 255, 255], [0, 0, 255], [255, 0, 0]] # 'Pedestrian': 0, 'Car': 1, 'Cyclist': 2
+
     return configs
 
 
 # create model according to selected model type
 def create_model(configs):
+
     # check for availability of model file
     assert os.path.isfile(configs.pretrained_filename), "No file at {}".format(configs.pretrained_filename)
 
@@ -165,7 +160,6 @@ def create_model(configs):
         ####### ID_S3_EX1-4 START #######     
         #######
         print("student task ID_S3_EX1-4")
-        # model = fpn_resnet.get_pose_net(configs.num_layers, configs.heads, configs.head_conv, configs.imagenet_pretrained)
         model = fpn_resnet.get_pose_net(18, configs.heads, configs.head_conv, configs.imagenet_pretrained)
 
         #######
@@ -181,7 +175,7 @@ def create_model(configs):
     # set model to evaluation state
     configs.device = torch.device('cpu' if configs.no_cuda else 'cuda:{}'.format(configs.gpu_idx))
     model = model.to(device=configs.device)  # load model to either cpu or gpu
-    model.eval() 
+    model.eval()          
 
     return model
 
@@ -216,14 +210,17 @@ def detect_objects(input_bev_maps, model, configs):
             ####### ID_S3_EX1-5 START #######     
             #######
             print("student task ID_S3_EX1-5")
+
             outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
             outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
 
             detections = decode(outputs['hm_cen'], outputs['cen_offset'], outputs['direction'], outputs['z_coor'], outputs['dim'], K=configs.K)
             detections = detections.cpu().numpy().astype(np.float32)
+
             detections = post_processing(detections, configs)
             detections = detections[0][1]
-            print('Detections: \n', detections)
+
+            print('Detections: ', detections)
 
             #######
             ####### ID_S3_EX1-5 END #######     
@@ -237,20 +234,21 @@ def detect_objects(input_bev_maps, model, configs):
     objects = [] 
 
     ## step 1 : check whether there are any detections
-    if len(detections) !=0 :
+    if len(detections) != 0:
         ## step 2 : loop over all detections
         for det in detections:
-            id, y, x, z, h, w, l, yaw = det
-            x_diff = configs.lim_x[1] - configs.lim_x[0] 
-            y_diff = configs.lim_y[1] - configs.lim_y[0] 
+            score, y, x, z, h, w, l, yaw = det
+            x_diff = configs.lim_x[1] - configs.lim_x[0]
+            y_diff = configs.lim_y[1] - configs.lim_y[0]
 
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
-            x = x / configs.bev_height * x_diff
-            y = y / configs.bev_width * y_diff
+            x = (x / configs.bev_height)  * x_diff
+            y = (y / configs.bev_width) * y_diff - (y_diff/2.0)
             w = w / configs.bev_width * y_diff
             l = l / configs.bev_height * x_diff
+            print(x, y)
             ## step 4 : append the current object to the 'objects' array
-            objects.append([id, y, x, z, h, w, l, -yaw])
+            objects.append([score, x, y, z, h, w, l, -yaw])
         
     #######
     ####### ID_S3_EX2 START #######   
