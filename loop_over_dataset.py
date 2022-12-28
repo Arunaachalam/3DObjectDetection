@@ -83,7 +83,7 @@ if exercise == 'ID_S2_EX1-3':
     exec_detection = ['bev_from_pcl']
     exec_tracking = []
     exec_visualization = []
-    vis = True
+    vis = False
 
 if exercise == 'ID_S3_EX1-2':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
@@ -99,13 +99,14 @@ if exercise == 'ID_S3_EX1-2':
 if exercise == 'ID_S4_EX1-3':
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord'
     sequence = '1'
-    model_select = 'darknet'
-    model = 'darknet'
+    model_select = 'fpn_resnet'
+    model = 'fpn-resnet'
     show_only_frames = [50, 51]
     exec_data = ['pcl_from_rangeimage']
-    exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance']
+    exec_detection = ['bev_frpm_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance']
     exec_tracking = []
     exec_visualization = ['show_detection_performance']
+    vis = False
 
 ## Select Waymo Open Dataset file and frame numbers
 # data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1

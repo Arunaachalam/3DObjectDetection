@@ -204,6 +204,8 @@ def detect_objects(input_bev_maps, model, configs):
                     yaw = np.arctan2(im, re)
                     detections.append([1, x, y, 0.0, 1.50, w, l, yaw])    
 
+            print ('Detections: ', detections)
+
         elif 'fpn_resnet' in configs.arch:
             # decode output and perform post-processing
             

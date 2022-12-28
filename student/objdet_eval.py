@@ -13,7 +13,6 @@
 # general package imports
 import numpy as np
 import matplotlib
-#matplotlib.use('wxagg') # change backend so that figure maximizing works on Mac as well     
 import matplotlib.pyplot as plt
 
 import torch
@@ -56,22 +55,27 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             ## step 2 : loop over all detected objects
             for det in detections:
                 ## step 3 : extract the four corners of the current detection
-                id, x_d, y_d, z_d, w_d, h_d, l_d, heading_d = det
+                score, x_d, y_d, z_d, w_d, h_d, l_d, heading_d = det
                 det_box = tools.compute_box_corners(x_d, y_d, w_d, l_d, heading_d)
+
                 ## step 4 : computer the center distance between label and detection bounding-box in x, y, and z
                 x_diff = np.array(x - x_d).item()
                 y_diff = np.array(y - y_d).item()
                 z_diff = np.array(z - z_d).item()
+
                 ## step 5 : compute the intersection over union (IOU) between label and detection bounding-box
                 label_poly = Polygon(label_box)
                 det_poly = Polygon(det_box)
                 intersection = label_poly.intersection(det_poly).area
                 union = label_poly.union(det_poly).area
-                iou = intersection / unioin
+                iou = intersection / union
+                print(f'{score} iou: ', iou)
 
                 ## step 6 : if IOU exceeds min_iou threshold, store [iou,dist_x, dist_y, dist_z] in matches_lab_det and increase the TP count
                 if iou > min_iou:
                     matches_lab_det.append([iou, x_diff, y_diff, z_diff])
+
+                
             #######
             ####### ID_S4_EX1 END #######     
             
@@ -80,6 +84,7 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             best_match = max(matches_lab_det,key=itemgetter(1)) # retrieve entry with max iou in case of multiple candidates   
             ious.append(best_match[0])
             center_devs.append(best_match[1:])
+
 
 
     ####### ID_S4_EX2 START #######     
@@ -128,6 +133,8 @@ def compute_performance_stats(det_performance_all, configs_det):
     true_positives = float(sum(np.array(pos_negs)[:, 1]))
     false_negatives = float(sum(np.array(pos_negs)[:, 2]))
     false_positives = float(sum(np.array(pos_negs)[:, 3]))
+
+    print(all_positives)
 
     ## step 2 : compute precision
     precision = true_positives / (true_positives + false_positives)
