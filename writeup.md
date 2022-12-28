@@ -7,7 +7,7 @@ In this task the following things are obtained.
 3. The image is cropped to view only =/- 90 degrees left and right
 4. The image is converted into 8 bit channels
 
-![alt text](./img/Ex1/ex1.png)
+![alt text](./img/Ex1/eX1.png)
 
 ## ID_S1_EX2: Visualize Point-cloud
 In this task the following things are obtained
@@ -20,6 +20,7 @@ In this task the following things are obtained
 ![alt text](./img/Ex2/Img2.png)
 ![alt text](./img/Ex2/Img3.png)
 ![alt text](./img/Ex2/Img4.png)
+![alt text](./img/Ex2/Img5.png)
 
 ## ID_S2_EX1: Convert sensor coordinates to BEV-map coordinates
 In this task, the following things are obtained
@@ -54,4 +55,9 @@ In this task, the following things are obtained
 ## ID_S3_EX2: Extract 3D bounding boxes frommodel response
 In this task, the following things are obtained
 1. The bounding boxes are plotted from the detections
+
+![alt text](./img/Ex6/fullimage.png)
+
+## ID_S4_EX1-3: The metrics are calculated from the images
+![alt text](./img/Ex7/precision.png)
 
